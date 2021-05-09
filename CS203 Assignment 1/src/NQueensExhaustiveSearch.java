@@ -1,6 +1,8 @@
 public class NQueensExhaustiveSearch {
     int n;
     long runTime;
+    int basicOpCount = 0;
+
     boolean[] columnRef; // Reference to quickly check if the current column has a queen in any row
     boolean[] positiveRef; // Reference to quickly check if there is a queen in the current positive diagonal
     boolean[] negativeRef; // Reference to quickly check if there is a queen in the current negative diagonal
@@ -21,6 +23,7 @@ public class NQueensExhaustiveSearch {
 
     public boolean canPlaceQueen(int row, int col) {
         // Check columns and diagonals
+        basicOpCount++;
         return !columnRef[col] && !negativeRef[row - col + n - 1] && !positiveRef[row + col];
     }
 

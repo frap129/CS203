@@ -47,7 +47,15 @@ public class NQueensMain {
                     .append(searchTests.get(i).runTime)
                     .append("ns | Repair: ")
                     .append(repairTests.get(i).runTime)
-                    .append("ns  |");
+                    .append("ns  |\n");
+
+            result.append("n=")
+                    .append(testCases[i])
+                    .append(" | Search: ")
+                    .append(searchTests.get(i).basicOpCount)
+                    .append("ops | Repair: ")
+                    .append(repairTests.get(i).basicOpCount)
+                    .append("ops  |");
             System.out.println(result);
         }
     }

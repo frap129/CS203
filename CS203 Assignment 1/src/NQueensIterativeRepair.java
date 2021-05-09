@@ -4,6 +4,7 @@ public class NQueensIterativeRepair {
     int n;
     int[] queens;
     long runTime;
+    int basicOpCount = 0;
 
     // Count References
     int[] rowCount; // Number of queens in each row
@@ -67,7 +68,10 @@ public class NQueensIterativeRepair {
         for (int i = 0; i < n; i++) {
             // Randomly select a column that hasn't been chosen yet
             int col;
-            do { col = rand.nextInt(n); } while (columnChosen(col, i));
+            do {
+                col = rand.nextInt(n);
+                basicOpCount++;
+            } while (columnChosen(col, i));
 
             // Store column and update counts
             queens[i] = col;
@@ -97,6 +101,7 @@ public class NQueensIterativeRepair {
                             if(shouldSwap(i, j)) {
                                 swapQueens();
                                 swaps_performed++;
+                                basicOpCount++;
                             }
                         }
                     }
@@ -129,7 +134,6 @@ public class NQueensIterativeRepair {
         swappedNegativeDiagCount[index2 - queenI + n - 1]++;
         swappedNegativeDiagCount[index2 - queenJ + n - 1]--;
         swappedNegativeDiagCount[index1 - queenJ + n - 1]++;
-
 
         // Count new collisions
         int collisions = 0;
