@@ -39,7 +39,7 @@ public class NQueensIterativeRepair {
     }
 
     public boolean isAttacked(int row, int column) {
-        // Check columns and diagonals
+        // Check number of queens in the given column and diagonals
         return columnCount[column] != 0 ||
                 negativeDiagCount[row - column + n - 1] != 0 ||
                 positiveDiagCount[row + column] != 0;
@@ -67,9 +67,7 @@ public class NQueensIterativeRepair {
         for (int i = 0; i < n; i++) {
             // Randomly select a column that hasn't been chosen yet
             int col;
-            do {
-                col = rand.nextInt(n);
-            } while (columnChosen(col, i));
+            do { col = rand.nextInt(n); } while (columnChosen(col, i));
 
             // Store column and update counts
             queens[i] = col;
