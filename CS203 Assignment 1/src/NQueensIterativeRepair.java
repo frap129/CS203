@@ -4,6 +4,7 @@ import java.util.Random;
 public class NQueensIterativeRepair {
     int n;
     int[] queens;
+    long runTime;
 
     // Count References
     int[] rowCount; // Number of queens in each row
@@ -20,15 +21,14 @@ public class NQueensIterativeRepair {
     public NQueensIterativeRepair(int n) {
         this.n = n;
 
+        // Find a solution and calculate run time
         long start = System.nanoTime();
         queenSearch();
-        double end = System.nanoTime() - start;
-
-        System.out.println(Arrays.toString(queens));
-        System.out.println("Iterative Repair time to find solution: " + end + "ns");
+        runTime = System.nanoTime() - start;
     }
 
     public void initBoard() {
+        // Create queen location storage and fill with -1
         queens = new int[n];
         for (int i = 0; i < n; i++) queens[i] = -1;
 
@@ -63,25 +63,24 @@ public class NQueensIterativeRepair {
     public void populateBoard() {
         initBoard();
         Random rand = new Random();
-        rand.setSeed(1683549811812691024L); // I just mashed my numpad a bit, "random"
+
+        // Iterate over each row
         for (int i = 0; i < n; i++) {
+            // Randomly select a column that hasn't been chosen yet
             int col;
             do {
                 col = rand.nextInt(n);
-            } while (queensContains(col, i));
-            placeQueen(i, col);
+            } while (columnChosen(col, i));
+
+            // Store column and update counts
+            queens[i] = col;
+            rowCount[i]++;
+            columnCount[col]++;
+            positiveDiagCount[i + col]++;
+            negativeDiagCount[i - col + n - 1]++;
         }
     }
-
-    public void placeQueen(int row, int column) {
-        queens[row] = column;
-        rowCount[row]++;
-        columnCount[column]++;
-        positiveDiagCount[row + column]++;
-        negativeDiagCount[row - column + n - 1]++;
-    }
-
-    public boolean queensContains(int val, int length) {
+    public boolean columnChosen(int val, int length) {
         for (int i = 0; i <= length; i++) {
             if (queens[i] == val) return true;
         }
@@ -90,8 +89,9 @@ public class NQueensIterativeRepair {
 
     public void queenSearch() {
         do {
-            populateBoard();
             int swaps_performed;
+            populateBoard();
+
             do {
                 swaps_performed = 0;
                 for (int i = 0; i < n; i++) {
@@ -153,5 +153,33 @@ public class NQueensIterativeRepair {
         queens = swappedQueens;
         positiveDiagCount = swappedPositiveDiagCount;
         negativeDiagCount = swappedNegativeDiagCount;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder solution = new StringBuilder();
+        solution.append("Iterative Repair on n=")
+                .append(n)
+                .append(" run time: ")
+                .append(runTime)
+                .append("ns\n");
+
+        solution.append("Found solution:\n");
+        for (int i = 0; i < n; i++) {
+            solution.append("----".repeat(n))
+                    .append("-\n");
+            for (int j = 0; j < n; j++) {
+                if (j == queens[i]) {
+                    solution.append("| Q ");
+                } else {
+                    solution.append("|   ");
+                }
+            }
+            solution.append("|\n");
+        }
+        solution.append("----".repeat(n))
+                .append("-\n");
+
+        return solution.toString();
     }
 }

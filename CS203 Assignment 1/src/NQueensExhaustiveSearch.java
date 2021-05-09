@@ -2,6 +2,7 @@ import java.util.Arrays;
 
 public class NQueensExhaustiveSearch {
     int n;
+    long runTime;
     boolean[] columnRef; // Reference to quickly check if the current column has a queen in any row
     boolean[] positiveRef; // Reference to quickly check if there is a queen in the current positive diagonal
     boolean[] negativeRef; // Reference to quickly check if there is a queen in the current negative diagonal
@@ -17,10 +18,7 @@ public class NQueensExhaustiveSearch {
 
         long start = System.nanoTime();
         solve(0);
-        long end = System.nanoTime() - start;
-
-        System.out.println(Arrays.deepToString(boardRows));
-        System.out.println("Exhaustive Search time to find solution: " + end + "ns");
+        runTime = System.nanoTime() - start;
     }
 
     public boolean canPlaceQueen(int row, int column) {
@@ -56,5 +54,33 @@ public class NQueensExhaustiveSearch {
 
         // No solution is possible with the placements in the previous rows
         return false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder solution = new StringBuilder();
+        solution.append("Exhaustive Search on n=")
+                .append(n)
+                .append(" run time: ")
+                .append(runTime)
+                .append("ns\n");
+
+        solution.append("Found solution:\n");
+        for (int i = 0; i < n; i++) {
+            solution.append("----".repeat(n))
+                    .append("-\n");
+            for (int j = 0; j < n; j++) {
+                if (boardRows[i][j]) {
+                    solution.append("| Q ");
+                } else {
+                    solution.append("|   ");
+                }
+            }
+            solution.append("|\n");
+        }
+        solution.append("----".repeat(n))
+                .append("-\n");
+
+        return solution.toString();
     }
 }
