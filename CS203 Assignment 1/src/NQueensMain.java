@@ -6,10 +6,10 @@ public class NQueensMain {
             return;
         }
 
-        NQueensExhaustiveSearch search = new NQueensExhaustiveSearch(n);
-        System.out.println(search);
-
         NQueensIterativeRepair repair = new NQueensIterativeRepair(n);
         System.out.print(repair);
+
+        NQueensExhaustiveSearch search = new NQueensExhaustiveSearch(n);
+        System.out.println(search);
     }
 }

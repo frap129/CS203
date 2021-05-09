@@ -1,12 +1,10 @@
-import java.util.Arrays;
-
 public class NQueensExhaustiveSearch {
     int n;
     long runTime;
     boolean[] columnRef; // Reference to quickly check if the current column has a queen in any row
     boolean[] positiveRef; // Reference to quickly check if there is a queen in the current positive diagonal
     boolean[] negativeRef; // Reference to quickly check if there is a queen in the current negative diagonal
-    boolean[][] boardRows; // The board; 2D array where the first dimension is row
+    int[] queens; // The locations of queens where the index is the row and the value is the column
 
     public NQueensExhaustiveSearch(int n) {
         // Initialize the board
@@ -14,46 +12,52 @@ public class NQueensExhaustiveSearch {
         columnRef = new boolean[n];
         positiveRef = new boolean[2 * n - 1];
         negativeRef = new boolean[2 * n - 1];
-        boardRows = new boolean[n][n];
+        queens = new int[n];
 
         long start = System.nanoTime();
-        solve(0);
+        solve(0, 0);
         runTime = System.nanoTime() - start;
     }
 
-    public boolean canPlaceQueen(int row, int column) {
+    public boolean canPlaceQueen(int row, int col) {
         // Check columns and diagonals
-        return !columnRef[column] && !negativeRef[row - column + n - 1] && !positiveRef[row + column];
+        return !columnRef[col] && !negativeRef[row - col + n - 1] && !positiveRef[row + col];
     }
 
     // A depth-first search for finding a solution
-    public boolean solve(int row) {
+    public boolean solve(int row, int col) {
+        if (col == n) return false; // If we reach column = n, there's no solution
         if (row == n) return true; // If we reach row = n, we've found a solution
-        // Iterate each column in the current row
-        for (int i = 0; i < n; i++) {
-            if (canPlaceQueen(row, i)) {
-                // Place queen at first available space
-                boardRows[row][i] = true;
-                columnRef[i] = true;
-                negativeRef[row - i + n - 1] = true;
-                positiveRef[row + i] = true;
+        // Place a queen in the current column if possible
+        if (canPlaceQueen(row, col)) {
+            // Place queen at first available space
+            queens[row] = col;
+            columnRef[col] = true;
+            negativeRef[row - col + n - 1] = true;
+            positiveRef[row + col] = true;
 
-                // Validate this placement
-                if (solve(row + 1)) {
-                    // Current queen placement reaches a queen solution
-                    return true;
-                } else {
-                    // Current queen placement is not solvable, go to next column
-                    boardRows[row][i] = false;
-                    columnRef[i] = false;
-                    negativeRef[row - i + n - 1] = false;
-                    positiveRef[row + i] = false;
-                }
+            // Validate this placement
+            if (solve(row + 1, 0)) {
+                // Current queen placement reaches a queen solution
+                return true;
+            }
+
+            // Current queen placement is not solvable, reset placements
+            columnRef[col] = false;
+            negativeRef[row - col + n - 1] = false;
+            positiveRef[row + col] = false;
+        }
+
+        // Find the next unused column
+        int nextCol = col + 1;
+        for (int i = nextCol; i <  n; i++) {
+            if (!columnRef[i]) {
+                nextCol = i;
+                break;
             }
         }
 
-        // No solution is possible with the placements in the previous rows
-        return false;
+        return solve(row, nextCol);
     }
 
     @Override
@@ -70,7 +74,7 @@ public class NQueensExhaustiveSearch {
             solution.append("----".repeat(n))
                     .append("-\n");
             for (int j = 0; j < n; j++) {
-                if (boardRows[i][j]) {
+                if (j == queens[i]) {
                     solution.append("| Q ");
                 } else {
                     solution.append("|   ");
