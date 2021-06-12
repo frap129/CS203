@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/CS203.iml" filepath="$PROJECT_DIR$/CS203.iml" />
       <module fileurl="file://$PROJECT_DIR$/CS203 Assignment 1/CS203 Assignment 1.iml" filepath="$PROJECT_DIR$/CS203 Assignment 1/CS203 Assignment 1.iml" />
       <module fileurl="file://$PROJECT_DIR$/CS203 Assignment 2/CS203 Assignment 2.iml" filepath="$PROJECT_DIR$/CS203 Assignment 2/CS203 Assignment 2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SortingAlgorithms/SortingAlgorithms.iml" filepath="$PROJECT_DIR$/SortingAlgorithms/SortingAlgorithms.iml" />
     </modules>
   </component>
 </project>
