@@ -8,7 +8,7 @@ public class ClosestPairDivideAndConquer {
 
     public ClosestPairDivideAndConquer(Point[] points) {
         long start = System.nanoTime();
-        Arrays.sort(points, Comparator.comparingInt(a -> a.x));
+        quicksortByX(points, 0, (points.length - 1));
         closest = findClosestPair(points);
         runTime = System.nanoTime() - start;
     }
@@ -87,11 +87,100 @@ public class ClosestPairDivideAndConquer {
         }
 
         Point[] qLeft = pLeft.clone();
-        Arrays.sort(qLeft, Comparator.comparingInt(a -> a.y));
+        mergesortByY(qLeft);
         Point[] qRight = pRight.clone();
-        Arrays.sort(qRight, Comparator.comparingInt(a -> a.y));
+        mergesortByY(qRight);
 
         return new Pair<>(new Pair<>(pLeft, pRight), new Pair<>(qLeft, qRight));
+    }
+
+    public static void quicksortByX(Point[] A, int left, int right) {
+        // Check if any sorting is really necessary.
+        if (left < right) {
+            // Array partitioning (any partitioning algorithm can be used here).
+            int pivot = hoarePartitioning(A, left, right);
+            // Recursive application of Quicksort to left-part and right-part.
+            quicksortByX(A, left, pivot - 1);
+            quicksortByX(A, pivot + 1, right);
+        }
+    }
+
+    // Taken from the decrease and conquer lecture slides
+    public static int hoarePartitioning(Point[] A, int left, int right) {
+        int p = A[left].x;
+        // Pivot selected as the first element in the array list.
+        // Init internal indices for double-scans.
+        int i = left;
+        // First item to be considered is at i+1 (see do-while).
+        int j = right + 1;
+        // First item to be considered is at j-1 (see do-while).
+        // Loop to perform multiple double-scans.
+        do {
+            // Left-to-right scan.
+            while ((i <= (A.length - 1)) && (A[i].x < p)) {
+                i++;
+            }
+            // Right-to-left scan.
+            do {
+                j--;
+            } while ((j >= 0) && (A[j].x > p));
+            // Swap A[i] with A[j].
+            Point temp = A[i];
+            A[i] = A[j];
+            A[j] = temp;
+        } while (i < j);
+        // Stop when double-scans indices met.
+        // Undo the last swap because i was >= than j (re-swap A[i] with A[j]).
+        Point temp = A[i];
+        A[i] = A[j];
+        A[j] = temp;
+        // Put pivot in correct position (swap pivot at A[left] with A[j]).
+        temp = A[left];
+        A[left] = A[j];
+        A[j] = temp;
+        // Return index of pivot in final partitioning.
+        return j;
+    }
+
+    public static void mergeSortedArrays(Point[] B, Point[] C, Point[] A) {
+        int i = 0, j = 0, k = 0;
+        // Init temp variables.
+        // Scanning sorted arrays B and C, while inserting in A.
+        while ((i < B.length) && (j < C.length)) {
+            if (B[i].y <= C[j].y) {
+                A[k] = B[i];
+                i++;
+            } else {
+                A[k] = C[j];
+                j++;
+            }
+            k++;
+        }
+        // One scan has terminated, transfer remaining sorted data in A.
+        if (i == B.length) {
+            System.arraycopy(C, j, A, k, C.length - j);
+        } else {
+            System.arraycopy(B, i, A, k, B.length - i);
+        }
+    }
+
+    public static void mergesortByY(Point[] A) {
+        if (A.length > 1) {
+            // Check if sorting is really necessary.
+            int h = (int) Math.floor(A.length / 2);
+            // Determine halves size.
+            // Init half 1 and 2.
+
+            Point[] B = new Point[h];
+            System.arraycopy(A, 0, B, 0, h);
+            Point[] C = new Point[A.length - h];
+            System.arraycopy(A, h, C, 0, A.length - h);
+            // Sort (recursively) halves 1 and 2.
+            mergesortByY(B);
+            mergesortByY(C);
+            // Merge sorted halves (arrays B and C) into final sorted array (A).
+            mergeSortedArrays(B, C, A);
+        }
     }
 
     public static class Pair<T> {

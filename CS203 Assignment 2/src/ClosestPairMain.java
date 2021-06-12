@@ -1,7 +1,8 @@
+import java.util.Arrays;
 import java.util.Random;
 
 public class ClosestPairMain {
-    private final static int MAX_COORDINATE = 100;
+    private final static int MAX_COORDINATE = 1000;
 
     public static void main(String [] args) {
         int n = 0;
