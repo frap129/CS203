@@ -3,6 +3,7 @@ import java.util.Comparator;
 
 public class ClosestPairExhaustiveSearch {
     long runTime;
+    long basicOpCount = 0;
     PointPair closest = null;
 
     public ClosestPairExhaustiveSearch(Point[] points) {
@@ -12,9 +13,14 @@ public class ClosestPairExhaustiveSearch {
         runTime = System.nanoTime() - start;
     }
 
+    /*
+     * Exhaustive search solution by brute force.
+     * For each element, we iterate over all other elements and calculate the distance between
+     * them. A pair of points "d" with the shortest distance is recorded and updated whenever a
+     * new pair with a shorter distance is found.
+     */
     private PointPair findClosestPair(Point[] p) {
         PointPair d = null;
-        // Exhaustive search solution
         for (int i = 0; i < (p.length - 1); i++) {
             int k = i + 1;
             while (k <= (p.length - 1)) {
@@ -24,6 +30,7 @@ public class ClosestPairExhaustiveSearch {
                 } else {
                     d = d.minDistance(testPair);
                 }
+                basicOpCount++;
                 k++;
             }
         }

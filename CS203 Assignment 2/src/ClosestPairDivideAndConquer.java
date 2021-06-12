@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 public class ClosestPairDivideAndConquer {
     long runTime;
+    long basicOpCount = 0;
     PointPair closest = null;
 
     public ClosestPairDivideAndConquer(Point[] points) {
@@ -28,6 +29,7 @@ public class ClosestPairDivideAndConquer {
                         // Compare the current closest with the current test pair
                         d = d.minDistance(testPair);
                     }
+                    basicOpCount++;
                     k++;
                 }
             }
@@ -39,7 +41,7 @@ public class ClosestPairDivideAndConquer {
             Point[] pRight = arrays.first.second;
             Point[] qRight = arrays.second.second;
 
-            // Calculate d,  and m
+            // Calculate d, and m
             PointPair resultLeft = findClosestPair(pLeft);
             PointPair resultRight = findClosestPair(pRight);
             d = resultLeft.minDistance(resultRight);
@@ -58,6 +60,8 @@ public class ClosestPairDivideAndConquer {
                     }
                 }
             }
+            basicOpCount++;
+
             Point[] s = new  Point[sList.size()];
             sList.toArray(s);
 
@@ -68,6 +72,7 @@ public class ClosestPairDivideAndConquer {
                     PointPair testPair = new PointPair(s[k], s[i]);
                     d = d.minDistance(testPair);
                     k++;
+                    basicOpCount++;
                 }
             }
         }
@@ -75,7 +80,7 @@ public class ClosestPairDivideAndConquer {
     }
 
     private Pair<Pair<Point[]>> splitArrays(Point[] p) {
-        int newLength = p.length / 2;
+        int newLength = (int) Math.floor(p.length / 2);
         Point[] pLeft = new Point[newLength];
         Point[] pRight = new Point[p.length - newLength];
         for (int i = 0; i < p.length; i++) {
@@ -88,8 +93,10 @@ public class ClosestPairDivideAndConquer {
 
         Point[] qLeft = pLeft.clone();
         mergesortByY(qLeft);
+        basicOpCount++;
         Point[] qRight = pRight.clone();
         mergesortByY(qRight);
+        basicOpCount++;
 
         return new Pair<>(new Pair<>(pLeft, pRight), new Pair<>(qLeft, qRight));
     }
